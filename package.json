@@ -1,0 +1,22 @@
+{
+  "name": "delph-heroes-server",
+  "version": "1.0.0",
+  "description": "Socket server for delph-heroes game",
+  "main": "dist/index.js",
+  "author": "Matheus Bordin",
+  "license": "MIT",
+  "scripts": {
+    "build": "typescript",
+    "dev": "typescript -w",
+    "start": "nodemon dist/index.js"
+  },
+  "dependencies": {
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^11.11.1",
+    "@types/socket.io": "^2.1.2",
+    "nodemon": "^1.18.10",
+    "typescript": "^3.3.3333"
+  }
+}
