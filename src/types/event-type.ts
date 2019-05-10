@@ -21,7 +21,7 @@ export enum GeneralEvent {
 export enum LobbyEvent {
     Entered = "lobby-entered",
     Exited = "lobby-exited",
-    Finded = "lobby-finded"
+    Found = "lobby-found"
 }
 
 /**
@@ -34,7 +34,8 @@ export enum GameEvent {
     Started = "game-started",
     MessageReceived = "game-message-received",
     MessageSent = "game-message-send",
-    Finished = "game-finished"
+    Finished = "game-finished",
+    GameUpdated = "game-statistics-update"
 }
 
 /**
@@ -44,7 +45,19 @@ export enum GameEvent {
  * @enum {number}
  */
 export enum HeroEvent {
-    Killed = "hero-killed",
-    Moved = "hero-moved",
-    AttributeChange = "hero-attribute-change"
+    PositionChange = "hero-position-change",
+    Attack = "hero-attack",
+    UseSkill = "hero-use-skill",
+    Spawn = "hero-spawn"
+}
+
+/**
+ * Monster event type.
+ *
+ * @export
+ * @enum {number}
+ */
+export enum MonsterEvent {
+    MonsterAppear = "monster-appear",
+    MonsterDied = "monster-died"
 }
