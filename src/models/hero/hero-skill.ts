@@ -10,6 +10,7 @@ import { PlayerAttribute } from "../game/player";
 export abstract class HeroSkill {
     public name: string;
     public effects: HeroSkillEffect;
+    public delay: number; // Miliseconds
 }
 
 /**

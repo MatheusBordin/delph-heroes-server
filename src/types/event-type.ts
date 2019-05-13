@@ -1,10 +1,20 @@
-export type EventType = GeneralEvent | LobbyEvent | GameEvent | HeroEvent;
+export type EventType = GeneralEvent | LobbyEvent | GameEvent | PlayerEvent | SystemEvent;
+
+/**
+ * System event type.
+ *
+ * @export
+ * @enum {string}
+ */
+export enum SystemEvent {
+    Log = "log"
+}
 
 /**
  * General event type.
  *
  * @export
- * @enum {number}
+ * @enum {string}
  */
 export enum GeneralEvent {
     Connect = "connection",
@@ -16,7 +26,7 @@ export enum GeneralEvent {
  * Lobby event type.
  *
  * @export
- * @enum {number}
+ * @enum {string}
  */
 export enum LobbyEvent {
     Entered = "lobby-entered",
@@ -28,34 +38,34 @@ export enum LobbyEvent {
  * Game event type.
  *
  * @export
- * @enum {number}
+ * @enum {string}
  */
 export enum GameEvent {
     Started = "game-started",
     MessageReceived = "game-message-received",
     MessageSent = "game-message-send",
     Finished = "game-finished",
-    GameUpdated = "game-statistics-update"
+    StatiticsUpdated = "game-statistics-update",
+    PlayersUpdated = "game-players-update"
 }
 
 /**
- * Hero event type.
+ * Player event type.
  *
  * @export
- * @enum {number}
+ * @enum {string}
  */
-export enum HeroEvent {
-    PositionChange = "hero-position-change",
-    Attack = "hero-attack",
-    UseSkill = "hero-use-skill",
-    Spawn = "hero-spawn"
+export enum PlayerEvent {
+    PositionChange = "player-position-change",
+    Attack = "player-attack",
+    UseSkill = "player-use-skill"
 }
 
 /**
  * Monster event type.
  *
  * @export
- * @enum {number}
+ * @enum {string}
  */
 export enum MonsterEvent {
     MonsterAppear = "monster-appear",

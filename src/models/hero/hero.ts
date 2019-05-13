@@ -8,10 +8,13 @@ import { HeroSkill } from "./hero-skill";
  * @class Hero
  */
 export abstract class Hero {
+    public abstract name: string;
     public life: number;
     public damage: number;
-    public criticalAttackRate: number;
+    public criticalRate: number;
+    public defense: number;
     public defenseRate: number;
-    public skills: HeroSkill[];
+    public skills: {
+        [key: string]: HeroSkill;
+    };
 }
-
