@@ -5,6 +5,14 @@ import { Player } from "../models/game/player";
 import { Hero } from "../models/hero/hero";
 import { logger } from "../helpers/logger";
 
+// Heroes
+import { BerryHero } from "../models/hero/heroes/berry";
+import { CyrusHero } from "../models/hero/heroes/cyrus";
+import { KorvaHero } from "../models/hero/heroes/korva";
+import { LezoHero } from "../models/hero/heroes/lezo";
+import { RoannHero } from "../models/hero/heroes/roann";
+import { StokvHero } from "../models/hero/heroes/stokv";
+
 /**
  * Game storage.
  *
@@ -21,10 +29,16 @@ export class GameService {
     private waitingGames: Game[];
 
     // Config vars.
-    private respawnTime = 5000;
+    private respawnTime = 5000; // 5 Sec.
+    private gameTime = 600000; // 10 Min.
     private playerByTeam = 3;
     private heroes: Hero[] = [
-
+        new BerryHero(),
+        new CyrusHero(),
+        new KorvaHero(),
+        new LezoHero(),
+        new RoannHero(),
+        new StokvHero()
     ];
 
     public listenEvents() {
@@ -42,7 +56,7 @@ export class GameService {
         game.addPlayer(player);
 
         // Dispatch messages.
-        emitter.sent(LobbyEvent.Entered, game.id, playerName);
+        emitter.sent(LobbyEvent.Found, game.id, playerName);
 
         logger.info(`Player '${playerName}' entered in game '${game.id}'`);
 
@@ -54,6 +68,12 @@ export class GameService {
             emitter.sent(GameEvent.Started, game.id, game.statitics, game.playersInformations);
 
             logger.info(`The game '${game.id}' started.`);
+
+            setTimeout(function() {
+                delete this.runningGames[game.id];
+                emitter.sent(GameEvent.Finished, game.id, game.statitics, game.playersInformations);
+                logger.info(`The game '${game.id}' finished.`);
+            }, this.gameTime)
         }
     }
 
@@ -95,7 +115,12 @@ export class GameService {
         const damage = originPlayer.calculateAttack(skill);
         const realDamage = targetPlayer.receiveAttack(damage);
         
-        if (targetPlayer.attribute.life === 0) {            
+        if (targetPlayer.attribute.life === 0) { 
+            originPlayer.kills++;
+            targetPlayer.deaths++;
+
+            emitter.sent(GameEvent.StatiticsUpdated, gameId, game.statitics);
+            
             // Respawn player.
             setTimeout(() => {
                 targetPlayer.attribute.life = targetPlayer.attribute.originalLife;
@@ -106,7 +131,6 @@ export class GameService {
                 logger.info(`The player '${target}' respawned`);
             }, this.respawnTime);
         }
-
         
         // Dispatch messages.
         emitter.sent(GameEvent.PlayersUpdated, gameId, game.playersInformations);
@@ -117,7 +141,7 @@ export class GameService {
         });
     }
 
-        /**
+    /**
      * Return next game in stack.
      *
      * @returns {Game}
