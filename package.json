@@ -6,16 +6,21 @@
   "author": "Matheus Bordin",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p .",
     "dev": "tsc -w",
-    "start": "nodemon dist/index.js"
+    "start": "node app.js",
+    "deploy": "gcloud app deploy"
   },
   "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.0",
     "socket.io": "^2.2.0",
     "uuid": "^3.3.2",
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.5",
+    "@types/express": "^4.16.1",
     "@types/node": "^11.11.1",
     "@types/socket.io": "^2.1.2",
     "@types/uuid": "^3.4.4",

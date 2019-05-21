@@ -1,6 +1,6 @@
 import { Game } from "../models/game/game";
 import emitter from "./event";
-import { GameEvent, LobbyEvent } from "../types/event-type";
+import { GameEvent, LobbyEvent, PlayerEvent } from "../types/event-type";
 import { Player } from "../models/game/player";
 import { Hero } from "../models/hero/hero";
 import { logger } from "../helpers/logger";
@@ -24,6 +24,21 @@ export default interface IGameStorage {
 }
 
 export class GameService {
+
+    /**
+     * Start new game service.
+     *
+     * @static
+     * @returns
+     * @memberof GameService
+     */
+    public static start() {
+        const gameService = new GameService();
+        gameService.listenEvents();
+
+        return gameService;
+    }
+
     // Storage
     private runningGames: IGameStorage = {};
     private waitingGames: Game[];
@@ -43,6 +58,9 @@ export class GameService {
 
     public listenEvents() {
         // listen events.
+        emitter.on(LobbyEvent.Entered, this.findGame.bind(this));
+        emitter.on(PlayerEvent.PositionChange, this.onPlayerPositionChange.bind(this));
+        emitter.on(PlayerEvent.Attack, this.onPlayerAttack.bind(this));
     }
 
     /**

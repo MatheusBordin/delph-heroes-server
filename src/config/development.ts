@@ -1,5 +1,5 @@
 import { IConfiguration } from "../types/configuration";
 
 export default <IConfiguration> {
-    port: 3000,
+    port: process.env.PORT || 8080,
 };
