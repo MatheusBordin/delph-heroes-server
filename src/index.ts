@@ -8,7 +8,7 @@ import { GameService } from "./services/game";
 
 const app = express();
 app.use(cors());
-app.get('/', (req, res) => res.send('Alive!'));
+app.get('/heartbeat', (req, res) => res.send('Alive!'));
 
 const server = http.createServer(app);
 const io = socket(server);

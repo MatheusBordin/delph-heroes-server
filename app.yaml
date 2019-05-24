@@ -1,1 +1,11 @@
 runtime: nodejs10
+
+manual_scaling:
+  instances: 1
+
+network:
+  session_affinity: true
+
+handlers:
+- url: /
+  static_dir: public
