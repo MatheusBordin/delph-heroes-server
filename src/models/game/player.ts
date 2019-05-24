@@ -17,7 +17,6 @@ export class Player {
     public skills: {
         [key: string]: HeroSkill;
     };
-    public position = new PlayerPosition(); 
 
     // Hack Control
     public lastUsages: IPlayerLastUse = {};
@@ -152,17 +151,6 @@ export class PlayerAttribute {
         this.defense = hero.defense;
         this.defenseRate = hero.defenseRate;
     }
-}
-
-/**
- * Player position model.
- *
- * @export
- * @class PlayerPosition
- */
-export class PlayerPosition {
-    public x = 0;
-    public y = 0;
 }
 
 /**

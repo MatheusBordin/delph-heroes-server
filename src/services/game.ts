@@ -45,7 +45,7 @@ export class GameService {
 
     // Config vars.
     private respawnTime = 5000; // 5 Sec.
-    private gameTime = 20000; //600000; // 10 Min.
+    private gameTime = 120000; //600000; // 10 Min.
     private playerByTeam = 1;
     private heroes: Hero[] = [
         new BerryHero(),
@@ -59,7 +59,6 @@ export class GameService {
     public listenEvents() {
         // listen events.
         emitter.on(LobbyEvent.Entered, this.findGame.bind(this));
-        emitter.on(PlayerEvent.PositionChange, this.onPlayerPositionChange.bind(this));
         emitter.on(PlayerEvent.Attack, this.onPlayerAttack.bind(this));
     }
 
@@ -78,7 +77,7 @@ export class GameService {
 
         logger.info(`Player '${playerName}' entered in game '${game.id}'`);
 
-        if (game.playersCount === 1) {
+        if (game.playersCount === this.playerByTeam * 2) {
             this.waitingGames.shift();
             this.runningGames[game.id] = game;
 
@@ -93,27 +92,6 @@ export class GameService {
                 logger.info(`The game '${game.id}' finished.`);
             }, this.gameTime)
         }
-    }
-
-    /**
-     * Dispatch on player position updated.
-     *
-     * @param {string} gameId The game ID.
-     * @param {string} playerName The player name.
-     * @param {number} x New X position.
-     * @param {number} y New Y position.
-     * @memberof GameService
-     */
-    public onPlayerPositionChange(gameId: string, playerName: string, x: number, y: number) {
-        const game = this.runningGames[gameId];
-        const player = game.getPlayer(playerName);
-        
-        logger.info(`Player '${playerName}' position updated from {x: ${player.position.x}, y: ${player.position.y}} to {x: ${x}, y: ${y}}`);
-        player.position.x = x;
-        player.position.y = y;
-
-        // Dispatch messages.
-        emitter.sent(GameEvent.PlayersUpdated, gameId, game.playersInformations);
     }
 
     /**

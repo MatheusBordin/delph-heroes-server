@@ -2,7 +2,6 @@ import { Server } from "socket.io";
 import { GeneralEvent, LobbyEvent, PlayerEvent, GameEvent } from "../types/event-type";
 import { IUserSocket } from "../types/socket";
 import emitter from "./event";
-import { PlayerPosition } from "../models/game/player";
 import { IGameStatitics } from "../models/game/statitics";
 import { logger } from "../helpers/logger";
 
@@ -23,11 +22,32 @@ export class SocketService {
         this._io.on("connection", (socket: IUserSocket) => {
             this.onConnection(socket);
 
-            socket.on(GeneralEvent.ChooseName, ({ name }: { name: string }) => this.onChooseName(socket, name));
-            socket.on(LobbyEvent.Entered, () => emitter.sent(LobbyEvent.Entered, socket.name));
-            socket.on(PlayerEvent.PositionChange, (position: PlayerPosition) => emitter.sent(PlayerEvent.PositionChange, socket.name, position.x, position.y));
-            socket.on(PlayerEvent.Attack, (attack: {target: string, skill?: string}) => emitter.sent(PlayerEvent.Attack, socket.name, attack.target, attack.skill));
-            socket.on(PlayerEvent.UseSkill, (skillAt: any) => socket.broadcast.emit(PlayerEvent.UseSkill, skillAt));
+            socket.on(
+                GeneralEvent.ChooseName, 
+                ({ name }: { name: string }) => this.onChooseName(socket, name)
+            );
+            socket.on(
+                LobbyEvent.Entered, 
+                () => emitter.sent(LobbyEvent.Entered, socket.name)
+            );
+            socket.on(
+                PlayerEvent.PositionChange, 
+                (position: any) => {
+                    socket.broadcast.emit(PlayerEvent.PositionChange, { playerName: socket.name, position });
+                    logger.info(`Player ${socket.name} position change`);
+                }
+            );
+            socket.on(
+                PlayerEvent.Attack, 
+                (attack: {target: string, skill?: string}) => emitter.sent(PlayerEvent.Attack, socket.name, attack.target, attack.skill)
+            );
+            socket.on(
+                PlayerEvent.UseSkill, 
+                (skillAt: any) => {
+                    socket.broadcast.emit(PlayerEvent.UseSkill, skillAt);
+                    logger.info(`Player ${socket.name} usage skill`);
+                }
+            );
 
             socket.on(GeneralEvent.Disconnect, () => this.onDisconnection(socket));
         });

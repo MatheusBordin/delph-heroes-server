@@ -82,10 +82,10 @@ export class Game {
     public get playersInformations() {
         return {
             one: this.teamOne.players.map(
-                ({ name, hero, attribute, position }) =>  ({ name, hero, attribute, position })
+                ({ name, hero, attribute }) =>  ({ name, hero, attribute })
             ),
             two: this.teamTwo.players.map(
-                ({ name, hero, attribute, position }) =>  ({ name, hero, attribute, position })
+                ({ name, hero, attribute }) =>  ({ name, hero, attribute })
             )
         };
     }
