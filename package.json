@@ -7,9 +7,9 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc -p .",
-    "dev": "tsc -w",
+    "build:dev": "tsc -w",
     "start": "node app.js",
-    "deploy": "gcloud app deploy"
+    "postinstall": "tsc -p ."
   },
   "dependencies": {
     "cors": "^2.8.5",
