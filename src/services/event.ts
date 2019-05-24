@@ -18,7 +18,7 @@ export class Emitter {
      * @memberof Emitter
      */
     public on(event: EventType, cb: (...params: any[]) => void) {
-        this._eventEmitter.on(event, cb);
+        this._eventEmitter.on(event, (args: any[]) => cb(...args));
     }
 
     /**

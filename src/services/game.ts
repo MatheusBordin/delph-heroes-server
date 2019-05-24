@@ -41,12 +41,12 @@ export class GameService {
 
     // Storage
     private runningGames: IGameStorage = {};
-    private waitingGames: Game[];
+    private waitingGames: Game[] = [];
 
     // Config vars.
     private respawnTime = 5000; // 5 Sec.
-    private gameTime = 600000; // 10 Min.
-    private playerByTeam = 3;
+    private gameTime = 20000; //600000; // 10 Min.
+    private playerByTeam = 1;
     private heroes: Hero[] = [
         new BerryHero(),
         new CyrusHero(),
@@ -70,7 +70,7 @@ export class GameService {
      */
     public findGame(playerName: string) {
         const game = this.getOrCreateGame();
-        const player =  new Player(playerName, this.foundRandomHeroe());
+        const player =  new Player(playerName, this.foundRandomHero());
         game.addPlayer(player);
 
         // Dispatch messages.
@@ -78,7 +78,7 @@ export class GameService {
 
         logger.info(`Player '${playerName}' entered in game '${game.id}'`);
 
-        if (game.playersCount === this.playerByTeam * 2) {
+        if (game.playersCount === 1) {
             this.waitingGames.shift();
             this.runningGames[game.id] = game;
 
@@ -87,7 +87,7 @@ export class GameService {
 
             logger.info(`The game '${game.id}' started.`);
 
-            setTimeout(function() {
+            setTimeout(() => {
                 delete this.runningGames[game.id];
                 emitter.sent(GameEvent.Finished, game.id, game.statitics, game.playersInformations);
                 logger.info(`The game '${game.id}' finished.`);
@@ -169,7 +169,7 @@ export class GameService {
         let game = this.waitingGames[0];
 
         if (!game) {
-            const game = new Game();
+            game = new Game();
             this.waitingGames.push(game);
         }
 
@@ -182,8 +182,8 @@ export class GameService {
      * @returns
      * @memberof GameService
      */
-    private foundRandomHeroe() {
-        const randomIndex = Math.ceil(Math.random() * this.heroes.length);
+    private foundRandomHero() {
+        const randomIndex = Math.ceil(Math.random() * this.heroes.length) - 1;
 
         return this.heroes[randomIndex];
     }

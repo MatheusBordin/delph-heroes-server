@@ -19,7 +19,7 @@ export enum SystemEvent {
 export enum GeneralEvent {
     Connect = "connection",
     Disconnect = "disconnect",
-    ChooseName = "socket-choose-name"
+    ChooseName = "name"
 }
 
 /**

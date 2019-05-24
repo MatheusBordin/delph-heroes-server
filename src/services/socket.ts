@@ -2,8 +2,9 @@ import { Server } from "socket.io";
 import { GeneralEvent, LobbyEvent, PlayerEvent, GameEvent } from "../types/event-type";
 import { IUserSocket } from "../types/socket";
 import emitter from "./event";
-import { PlayerPosition, Player } from "../models/game/player";
+import { PlayerPosition } from "../models/game/player";
 import { IGameStatitics } from "../models/game/statitics";
+import { logger } from "../helpers/logger";
 
 export class SocketService {
     /**
@@ -22,7 +23,7 @@ export class SocketService {
         this._io.on("connection", (socket: IUserSocket) => {
             this.onConnection(socket);
 
-            socket.on(GeneralEvent.ChooseName, (name: string) => this.onChooseName(socket, name));
+            socket.on(GeneralEvent.ChooseName, ({ name }: { name: string }) => this.onChooseName(socket, name));
             socket.on(LobbyEvent.Entered, () => emitter.sent(LobbyEvent.Entered, socket.name));
             socket.on(PlayerEvent.PositionChange, (position: PlayerPosition) => emitter.sent(PlayerEvent.PositionChange, socket.name, position.x, position.y));
             socket.on(PlayerEvent.Attack, (attack: {target: string, skill?: string}) => emitter.sent(PlayerEvent.Attack, socket.name, attack.target, attack.skill));
@@ -42,6 +43,9 @@ export class SocketService {
      */
     public onConnection(socket: IUserSocket) {
         emitter.sent(GeneralEvent.Connect, socket);
+
+        // Log
+        logger.info('New player connected');
     }
 
     /**
@@ -52,6 +56,9 @@ export class SocketService {
      */
     public onDisconnection(socket: IUserSocket) {
         emitter.sent(GeneralEvent.Disconnect, socket);
+
+        // Log
+        logger.info(`Player ${socket.name || socket.id} disconnected`);
     }
 
     /**
@@ -63,6 +70,9 @@ export class SocketService {
      */
     public onChooseName(socket: IUserSocket, name: string) {
         socket.name = name;
+
+        // Log
+        logger.info(`Player '${name}' choosed your name`);
     }
 
     /**
@@ -73,7 +83,16 @@ export class SocketService {
      * @memberof SocketService
      */
     public onGameFound(gameId: string, playerName: string) {
-        const [socketId, socket] = Object.entries(this._io.sockets.sockets).find(([id, item]) => (item as IUserSocket).name === playerName);
+        let socket: IUserSocket;
+        const sockets = Object.entries(this._io.sockets.sockets);
+
+        for (const [id, item] of sockets) {
+            if ((item as IUserSocket).name === playerName) {
+                socket = item as IUserSocket;
+                break;
+            }
+        }
+
         socket.join(`game-${gameId}`);
     }
 
@@ -86,7 +105,7 @@ export class SocketService {
      * @memberof SocketService
      */
     public onGameStarted(gameId: string, gameStats: IGameStatitics, playerInfos: any) {
-        this._io.to(`game-${gameId}`).emit(GameEvent.Started, gameStats, playerInfos);
+        this._io.to(`game-${gameId}`).emit(GameEvent.Started, { gameStats, playerInfos });
     }
 
     /**
@@ -98,7 +117,7 @@ export class SocketService {
      * @memberof SocketService
      */
     public onGameFinish(gameId: string, gameStats: IGameStatitics, playerInfos: any) {
-        this._io.to(`game-${gameId}`).emit(GameEvent.Finished, gameStats, playerInfos);
+        this._io.to(`game-${gameId}`).emit(GameEvent.Finished, {gameStats, playerInfos});
     }
 
     /**
