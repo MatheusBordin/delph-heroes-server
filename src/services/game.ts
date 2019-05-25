@@ -45,7 +45,7 @@ export class GameService {
 
     // Config vars.
     private respawnTime = 5000; // 5 Sec.
-    private gameTime = 120000; //600000; // 10 Min.
+    private gameTime = 600000; //600000; // 10 Min.
     private playerByTeam = 1;
     private heroes: Hero[] = [
         new BerryHero(),
