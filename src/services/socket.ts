@@ -39,7 +39,7 @@ export class SocketService {
             );
             socket.on(
                 PlayerEvent.Attack, 
-                (attack: {target: string, skill?: string}) => emitter.sent(PlayerEvent.Attack, socket.name, attack.target, attack.skill)
+                (attack: {target: string, skill?: string}) => emitter.sent(PlayerEvent.Attack, socket.currGame, socket.name, attack.target, attack.skill)
             );
             socket.on(
                 PlayerEvent.UseSkill, 
@@ -113,6 +113,7 @@ export class SocketService {
             }
         }
 
+        socket.currGame = gameId;
         socket.join(`game-${gameId}`);
     }
 
