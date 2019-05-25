@@ -46,7 +46,7 @@ export class GameService {
     // Config vars.
     private respawnTime = 5000; // 5 Sec.
     private gameTime = 600000; //600000; // 10 Min.
-    private playerByTeam = 1;
+    private playerByTeam = 3;
     private heroes: Hero[] = [
         new BerryHero(),
         new CyrusHero(),
@@ -110,8 +110,6 @@ export class GameService {
 
         const damage = originPlayer.calculateAttack(skill);
         const realDamage = targetPlayer.receiveAttack(damage);
-
-        console.log(originPlayer.name, targetPlayer.name);
         
         if (targetPlayer.attribute.life === 0) { 
             originPlayer.kills++;
