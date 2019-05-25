@@ -31,7 +31,7 @@ export class Game {
      */
     public addPlayer(player: Player) {
         const oneLength = this.teamOne.players.length;
-        const twoLength = this.teamOne.players.length;
+        const twoLength = this.teamTwo.players.length;
 
         if (oneLength > twoLength) {
             this.teamTwo.players.push(player);
