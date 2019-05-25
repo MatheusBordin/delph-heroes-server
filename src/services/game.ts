@@ -104,13 +104,14 @@ export class GameService {
      * @memberof GameService
      */
     public onPlayerAttack(gameId: string, origin: string, target: string, skill?: string) {
-        console.log(gameId, origin, target);
         const game = this.runningGames[gameId];
         const originPlayer = game.getPlayer(origin);  
         const targetPlayer = game.getPlayer(target);  
 
         const damage = originPlayer.calculateAttack(skill);
         const realDamage = targetPlayer.receiveAttack(damage);
+
+        console.log(originPlayer.name, targetPlayer.name);
         
         if (targetPlayer.attribute.life === 0) { 
             originPlayer.kills++;
